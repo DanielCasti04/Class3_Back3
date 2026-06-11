@@ -1,5 +1,8 @@
 import express from "express";
+import mongoose from "mongoose";
 import { addLogger } from "./utils/logger.js";
+import userRouter from "./routes/user.router.js";
+
 
 const app = express();
 const port = 8080;
@@ -11,6 +14,11 @@ app.listen(port, () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(addLogger);
+
+mongoose
+  .connect("mongodb://localhost:27017/prueba_testing")
+  .then(() => console.log("Conectado a MongoDB de forma exitosa"))
+  .catch((err) => console.error("Error en la base de datos: ", error));
 
 app.get("/", (req, res) => {
   req.logger.info("Estoy en la pag principal");
@@ -26,3 +34,25 @@ app.get("/cpanel", (req, res) => {
   req.logger.fatal("Estoy en el Panel de Admin Hosting");
   res.send("Estamos en el panel de admin");
 });
+
+app.get("/operacion_simple", (req, res) => {
+  let total = 0;
+
+  for (let i = 0; i < 1000000; i++) {
+    total += 1;
+  }
+
+  res.send(total);
+});
+
+app.get("/operacion_compleja", (req, res) => {
+  let total = 0;
+
+  for (let i = 0; i < 1000000000; i++) {
+    total += 1;
+  }
+
+  res.send(total);
+});
+
+app.use("/api/users", userRouter);
