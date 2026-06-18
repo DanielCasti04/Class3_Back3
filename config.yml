@@ -1,0 +1,21 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 60 #duración en seg 
+      arrivalRate: 5 # usuarios virtuales por segundo
+  #defaults:
+    #headers:
+      #Content-Type: "application/json"    
+
+scenarios:
+  - name: "Test endpoint GET (operacion simple)"
+    flow: 
+    - log: "Probando la operación simple"
+    - get:
+      url: "/operacion_simple"    
+
+  -name: "Test endpoint GET (operacion_compleja)"
+   flow:
+   -log: "Probando la operacion compleja"
+   -get: 
+        url: "/operacion_compleja"   
