@@ -1,0 +1,36 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 20 #duración en seg 
+      arrivalRate: 10  # usuarios virtuales por segundo
+  #defaults:
+    #headers:
+      #Content-Type: "application/json"    
+
+scenarios:
+  - name: "Usuarios (Test + Registracion + Login)"
+    flow: 
+     - log: "Crear datos fake de usuario"
+     - get:
+        url: "/api/user/test"    
+        capture:
+         - json: "$.name"
+           as: "name"
+         - json: "$.email"
+           as: "email"
+         - json: "$.password"
+           as: "password"
+     - log: "Registrar usuario"
+     - post:
+         url: "/api/user/create"    
+         json: 
+          name: "{{name}}"
+          email: "{{email}}"
+          password: "{{password}}"        
+     - log: "Login usuario"
+     - post:
+         url: "/api/user/login"    
+         json: 
+          email: "{{email}}"
+          password: "{{password}}"       
+
